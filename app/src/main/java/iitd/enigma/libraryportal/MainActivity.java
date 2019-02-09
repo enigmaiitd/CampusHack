@@ -1,5 +1,6 @@
 package iitd.enigma.libraryportal;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
 
@@ -46,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            LibraryMail.get(username, password);
+            LibraryMail.get(username, password, MainActivity.this);
+
             return null;
         }
 

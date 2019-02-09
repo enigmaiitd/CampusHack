@@ -1,7 +1,17 @@
 package iitd.enigma.libraryportal;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,7 +22,13 @@ import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.InternetAddress;
+import javax.mail.search.AndTerm;
+import javax.mail.search.ComparisonTerm;
+import javax.mail.search.FromTerm;
+import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
+import javax.mail.search.SubjectTerm;
 
 class BookInfo
 {
@@ -34,65 +50,82 @@ class BookInfo
 public class LibraryMail
 {
     public static BookInfo[] bookInfos;
+    private static Date lastReceivedDate;
 
-    public static void get(String username, String password)
+    static void get(String username, String password, Context context)
     {
-        String host = "mailstore.iitd.ac.in";// change accordinglya
+        String host = "mailstore.iitd.ac.in";// change accordingly
+        Log.e("LibraryMail", "YAY!");
 
         try
         {
-            // It is good to Use Tag Library to display dynamic content
             MailService mailService = new MailService();
+            Log.d("LibraryMail", "Come on!!");
             mailService.login(host, username, password);
 
-            SearchTerm term = new SearchTerm()
-            {
-                public boolean match(Message message)
-                {
-                    try
-                    {
-                        Address[] addresses = message.getFrom();
-                        if(addresses.length != 1)
-                        {
-                            return false;
-                        }
-                        String address = addresses[0].toString();
-                        if(address.equals("library@iitd.ac.in"))
-                        {
-                            return true;
-                        }
-                    }
-                    catch (MessagingException ex)
-                    {
-                        ex.printStackTrace();
-                    }
-                    return false;
-                }
-            };
+            String fileName = "lastReceivedDate";
 
-            Message[] messages = mailService.search(term);
+            SearchTerm fromLibraryTerm = new FromTerm(new InternetAddress("library@iitd.ac.in"));
+            SearchTerm subjectTerm = new AndTerm(new SubjectTerm("Central Library Book(s) Issue Slip"), fromLibraryTerm);
+            SearchTerm andTerm;
+
+            try
+            {
+                FileInputStream fis = context.openFileInput(fileName);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                lastReceivedDate = (Date) ois.readObject();
+
+                SearchTerm olderThan = new ReceivedDateTerm(ComparisonTerm.GE, lastReceivedDate);
+                andTerm = new AndTerm(subjectTerm, olderThan);
+            }
+            catch (FileNotFoundException fe)
+            {
+                andTerm = subjectTerm;
+            }
+
+            Log.d("LibraryMail", "woooh");
+
+            Message[] messages = mailService.search(andTerm);
+
+            Log.d("LibraryMail", "Waaaaaaaaaah");
 
             for(Message message : messages)
             {
                 processMessage(message);
             }
 
+            lastReceivedDate = messages[0].getReceivedDate();
+
+            FileOutputStream outputStream;
+            try
+            {
+                outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            }
+            catch(FileNotFoundException fi)
+            {
+                outputStream = new FileOutputStream(context.getFilesDir().getPath() + "/" + fileName);
+            }
+            ObjectOutputStream oos = new ObjectOutputStream(outputStream);
+            oos.writeObject(lastReceivedDate);
+
+            Log.d("LibraryMail", lastReceivedDate.toString());
             mailService.logout();
         }
         catch (Exception ex)
         {
-            Log.e("Email Check", ex.toString());
+            Log.e("LibraryMail", ex.getLocalizedMessage());
         }
     }
 
-    private static void processMessage(Message message) throws MessagingException
+    private static void processMessage(Message message) throws MessagingException, IOException
     {
+        Log.d("LibraryMail", "Waah");
         String subject = message.getSubject();
+            String messageString = new ReadMessage().getTextFromMessage(message);
 
-        if(subject.equals("Central Library Book(s) Issue Slip"))
-        {
+            /* MessageParser to be used here. TODO */
 
-        }
+
     }
 
     public static BookInfo[] generateDummyInfo()
