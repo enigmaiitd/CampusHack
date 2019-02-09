@@ -6,80 +6,78 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MessageParser {
-    public static BookInfo [] giveParsedObject(String messageString){
+    public static BookInfo[] infoIssue(String messageString) {
         //since function written according to whitespaces
         messageString = messageString.replace("\t", "        ");
 
         String accNo;
         String name;
-        Date dueDate=new Date();
-        String IssuedTo ;
+        Date dueDate = new Date();
+        String IssuedTo;
         String EntryNo;//if required
 
-        String [] lines;
+        String[] lines;
         String infoLine;
-        String [] info;
-        int count=0;//counter for line no
-        int noOfBooks=0;
+        String[] info;
+        int count = 0;//counter for line no
+        int noOfBooks = 0;
 
         //splitting string line by line
-        lines=messageString.split("\\r?\\n");
+        lines = messageString.split("\\r?\\n");
 
         //checking for occurence of ISSUE
-        for(;count<lines.length;count++)
-        {
-            if(lines[count].matches("(.*)ISSUE(.*)"))
+        for (; count < lines.length; count++) {
+            if (lines[count].matches("(.*)ISSUE(.*)"))
                 break;
         }
 
-
         count++;
-        while(count<lines.length)
+        while (count < lines.length)//search for nearest non-empty line
         {
-            if(lines[count].trim().isEmpty())
+            if (lines[count].trim().isEmpty())
                 count++;
             else break;
         }
 
 
-        String nameInfo=lines[count].trim(); //trimming whitespaces
-        String [] NameAndNo=nameInfo.split("\\(|\\)");//splitting by ( or )
-        IssuedTo=NameAndNo[0];//got issued to
-        EntryNo=NameAndNo[1];//got entry no (if required)
+        String nameInfo = lines[count].trim(); //trimming whitespaces
+        String[] NameAndNo = nameInfo.split("\\(|\\)");//splitting by ( or )
+        IssuedTo = NameAndNo[0];
+        EntryNo = NameAndNo[1];
 
-        count++;//moving to next line
+        count++;
         //checking for occurence of S NO
-        for(;count<lines.length;count++)
-        {
-            if(lines[count].matches("(.*)S NO(.*)"))
+        for (; count < lines.length; count++) {
+            if (lines[count].matches("(.*)S NO(.*)"))
                 break;
         }
 
         count++;
-        while(count<lines.length)
+        while (count < lines.length)//search for nearest non-empty line
         {
-            if(lines[count].trim().isEmpty())
+            if (lines[count].trim().isEmpty())
                 count++;
             else break;
         }
-        int firstBook=count;
-        while(count<lines.length)
+        int firstBook = count;//storing line no of data of first book
+        while (count < lines.length)//counting no of books
         {
-            infoLine=lines[count].trim();
-            if(infoLine.isEmpty()){
-                count++; continue;
+            infoLine = lines[count].trim();
+            if (infoLine.isEmpty()) {
+                count++;
+                continue;
             }
-            info=infoLine.split("\\s{2,30}");//splitting by 2 or more whitespaces
-            if(info.length>=4) noOfBooks++;
+            info = infoLine.split("\\s{2,30}");//splitting by 2 or more whitespaces
+            if (info.length >= 4) noOfBooks++;
             count++;
         }
 
-        BookInfo [] bookInfo= new BookInfo[noOfBooks];
+        BookInfo[] bookInfo = new BookInfo[noOfBooks];
 
-        count=firstBook;
+        count = firstBook;
 
-        for(int i=0;i<noOfBooks;i++) {
-            while (count < lines.length) {
+        for (int i = 0; i < noOfBooks; i++) {
+            while (count < lines.length) {//reaching the line where data of ith book begins
                 infoLine = lines[count].trim();
                 if (infoLine.isEmpty()) {
                     count++;
@@ -96,9 +94,7 @@ public class MessageParser {
             accNo = info[2].trim();//got accno
             String dateStr = info[3].trim();//got date in string form
 
-            //counting charcters(including whitespaces) before apperance of name of book in the current infoline
-            //this is because if name of book is continued in next few lines then almost same whitespaces appear
-            //before the name
+            //counting charcters(including whitespaces) before appearance of name of book in the current line
             infoLine = lines[count];
             int noOfWhite = 0;
             for (int k = 0; k < infoLine.length(); k++) {
@@ -109,7 +105,7 @@ public class MessageParser {
 
             for (count++; count < lines.length; count++) {
                 infoLine = lines[count];
-                if (infoLine == null || infoLine.isEmpty()) break;//break if empty string
+                if (infoLine == null || infoLine.isEmpty()) break;
                 int noOfWhite_current = 0;
                 for (int k = 0; k < infoLine.length(); k++) {
                     if (infoLine.charAt(k) == ' ') noOfWhite_current++;
@@ -119,22 +115,22 @@ public class MessageParser {
                     break;//break if no of leading whitespaces is lesser
 
                 infoLine = infoLine.trim();
-                name = name + " " + infoLine;//adding to name
+                name = name + " " + infoLine;//adding to name of book
             }
-            //THIS IS GIVING SOME ERROR
-            //String date1="11/10/2000"; for trial purpose
-            //dueDate=new SimpleDateFormat("dd/MM/yyyy").parse(dateStr);
 
+            //string to date
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             try {
 
                 dueDate = formatter.parse(dateStr);
-            } catch (ParseException e) {}
+            } catch (ParseException e) {
+            }
 
-            bookInfo[i]=new BookInfo(accNo,name,dueDate,IssuedTo);
+            bookInfo[i] = new BookInfo(accNo, name, dueDate, IssuedTo);
         }
 
         return bookInfo;
-
     }
+
+
 }
