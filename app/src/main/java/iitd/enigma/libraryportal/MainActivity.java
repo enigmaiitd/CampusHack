@@ -3,12 +3,11 @@ package iitd.enigma.libraryportal;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import javax.mail.Address;
-import javax.mail.Message;
+import com.thekhaeng.pushdownanim.PushDownAnim;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +36,18 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+        PushDownAnim.setPushDownAnimTo( mLogin)
+        .setOnClickListener( new View.OnClickListener(){
+            @Override
+            public void onClick( View view ){
+                Toast.makeText( MainActivity.this, "PUSH DOWN !!", Toast.LENGTH_SHORT ).show();
+            }
+
+        } );
+
+
     }
 
 
