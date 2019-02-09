@@ -55,12 +55,10 @@ public class LibraryMail
     static void get(String username, String password, Context context)
     {
         String host = "mailstore.iitd.ac.in";// change accordingly
-        Log.e("LibraryMail", "YAY!");
 
         try
         {
             MailService mailService = new MailService();
-            Log.d("LibraryMail", "Come on!!");
             mailService.login(host, username, password);
 
             String fileName = "lastReceivedDate";
@@ -83,18 +81,14 @@ public class LibraryMail
                 andTerm = subjectTerm;
             }
 
-            Log.d("LibraryMail", "woooh");
-
             Message[] messages = mailService.search(andTerm);
-
-            Log.d("LibraryMail", "Waaaaaaaaaah");
 
             for(Message message : messages)
             {
-                processMessage(message);
+                processIssueMessage(message);
             }
 
-            lastReceivedDate = messages[0].getReceivedDate();
+            lastReceivedDate = messages[messages.length - 1].getReceivedDate();
 
             FileOutputStream outputStream;
             try
@@ -108,7 +102,7 @@ public class LibraryMail
             ObjectOutputStream oos = new ObjectOutputStream(outputStream);
             oos.writeObject(lastReceivedDate);
 
-            Log.d("LibraryMail", lastReceivedDate.toString());
+            Log.i("LibraryMail", lastReceivedDate.toString());
             mailService.logout();
         }
         catch (Exception ex)
@@ -117,12 +111,12 @@ public class LibraryMail
         }
     }
 
-    private static void processMessage(Message message) throws MessagingException, IOException
+    private static void processIssueMessage(Message message) throws MessagingException, IOException
     {
-        Log.d("LibraryMail", "Waah");
+        Log.i("LibraryMail", "Processed Issue Message");
         String subject = message.getSubject();
             String messageString = new ReadMessage().getTextFromMessage(message);
-
+            BookInfo[] b = MessageParser.infoIssue(messageString);
             /* MessageParser to be used here. TODO */
 
 
