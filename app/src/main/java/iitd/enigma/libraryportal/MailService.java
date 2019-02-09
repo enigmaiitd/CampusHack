@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.URLName;
+import javax.mail.search.SearchTerm;
 
 public class MailService {
 
@@ -73,6 +74,11 @@ public class MailService {
 
     public Message[] getMessages() throws MessagingException {
         return folder.getMessages();
+    }
+
+    public Message[] search(SearchTerm term) throws MessagingException
+    {
+        return folder.search(term);
     }
 
 }

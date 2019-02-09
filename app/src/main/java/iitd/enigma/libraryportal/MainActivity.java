@@ -46,34 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-
-            String host = "mailstore.iitd.ac.in";// change accordinglya
-
-
-            try {
-                // It is good to Use Tag Library to display dynamic content
-                MailService mailService = new MailService();
-                mailService.login(host, username, password);
-                int messageCount = mailService.getMessageCount();
-
-                //just for tutorial purpose
-                if (messageCount > 5)
-                    messageCount = 5;
-                Message[] messages = mailService.getMessages();
-                for (int i = 0; i < messageCount; i++) {
-                    String subject = "";
-                    if (messages[i].getSubject() != null) {
-                        subject = messages[i].getSubject();
-                    }
-                    Address[] fromAddress = messages[i].getFrom();
-
-                    Log.d("Email Check", subject);
-
-
-                }
-            } catch (Exception ex) {
-                Log.e("Email Check", ex.toString());
-            }
+            LibraryMail.get(username, password);
             return null;
         }
 
