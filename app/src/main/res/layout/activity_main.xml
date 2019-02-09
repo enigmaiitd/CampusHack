@@ -40,4 +40,13 @@ android:inputType="textPassword"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="100dp" />
 
+    <TextView
+        android:id="@+id/outputView"
+        android:layout_width="match_parent"
+        android:layout_height="437dp"
+        android:layout_below="@+id/login"
+        android:layout_marginTop="54dp"
+        android:editable="false"
+        android:text="TextView" />
+
 </RelativeLayout>

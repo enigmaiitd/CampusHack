@@ -48,7 +48,7 @@ public class MailService {
         store.connect();
         folder = store.getFolder(url);
 
-        folder.open(Folder.READ_WRITE);
+        folder.open(Folder.READ_ONLY);
     }
 
     /**
