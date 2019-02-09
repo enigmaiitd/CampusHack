@@ -5,12 +5,8 @@ import android.util.Log;
 import java.util.Date;
 
 import javax.mail.Address;
-import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.Store;
 import javax.mail.search.SearchTerm;
 
 class BookInfo
@@ -102,10 +98,9 @@ public class LibraryMail
         }
     }
 
-    private static void processMessage(Message message)
+    private static void processMessage(Message message) throws Exception
     {
         String subject = message.getSubject();
-
         if(subject.equals("Central Library Book(s) Issue Slip"))
         {
 

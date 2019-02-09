@@ -4,14 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:padding="10dp">
 
 
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Welcome to IITD Librabry Portal"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:textColor="#000"
+        android:gravity="center"
+        android:id="@+id/info_activitymain"/>
     <EditText
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/info_activitymain"
         android:id="@+id/email_activitymain"
-        android:layout_width="373dp"
-        android:layout_height="41dp"
-        android:text="E"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Email"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.057"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -20,33 +34,25 @@
         app:layout_constraintVertical_bias="0.101" />
 
     <EditText
-        android:textSize="10px"
         android:id="@+id/password_activitymain"
-        android:layout_width="372dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_below="@+id/email_activitymain"
-        android:text="password"
-android:inputType="textPassword"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textSize="16sp"
         tools:layout_editor_absoluteX="19dp"
         tools:layout_editor_absoluteY="16dp" />
 
 
     <Button
-        android:layout_below="@+id/password_activitymain"
         android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/password_activitymain"
         android:text="Login"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="100dp" />
 
-    <TextView
-        android:id="@+id/outputView"
-        android:layout_width="match_parent"
-        android:layout_height="437dp"
-        android:layout_below="@+id/login"
-        android:layout_marginTop="54dp"
-        android:editable="false"
-        android:text="TextView" />
 
 </RelativeLayout>
