@@ -14,7 +14,7 @@
     android:id="@+id/imageView_activitymain"/>
 
     <TextView
-        android:layout_below="@id/imageView_activitymain"
+        android:layout_below="@+id/imageView_activitymain"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
 
 
     <android.support.design.widget.TextInputLayout
-        android:layout_below="@id/info_activitymain"
+        android:layout_below="@+id/info_activitymain"
         android:id="@+id/designWidgetEmail_activitymain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -48,7 +48,7 @@
 
     <android.support.design.widget.TextInputLayout
 
-        android:layout_below="@id/designWidgetEmail_activitymain"
+        android:layout_below="@+id/designWidgetEmail_activitymain"
         android:id="@+id/designWidgetPassword_activitymain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
