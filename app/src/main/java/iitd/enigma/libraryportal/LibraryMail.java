@@ -2,6 +2,7 @@ package iitd.enigma.libraryportal;
 
 import android.util.Log;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.mail.Address;
@@ -17,14 +18,14 @@ class BookInfo
 {
     public String accessionNumber;
     public String name;
-    public Date due_date;
+    public Date dueDate;
     public String issuedTo;
 
-    BookInfo(String accessionNumber, String name, Date due_date, String issuedTo)
+    BookInfo(String accessionNumber, String name, Date dueDate, String issuedTo)
     {
         this.accessionNumber = accessionNumber;
         this.name = name;
-        this.due_date = due_date;
+        this.dueDate = dueDate;
         this.issuedTo = issuedTo;
     }
 
@@ -43,24 +44,6 @@ public class LibraryMail
             // It is good to Use Tag Library to display dynamic content
             MailService mailService = new MailService();
             mailService.login(host, username, password);
-            /*int messageCount = mailService.getMessageCount();
-
-            //just for tutorial purpose
-            if (messageCount > 5)   messageCount = 5;
-            Message[] messages = mailService.getMessages();
-
-            for (int i = 0; i < messageCount; i++)
-            {
-                String subject = "";
-                if (messages[i].getSubject() != null)
-                {
-                    subject = messages[i].getSubject();
-                }
-
-                Address[] fromAddress = messages[i].getFrom();
-
-                Log.d("Email Check", subject);
-            }*/
 
             SearchTerm term = new SearchTerm()
             {
@@ -102,7 +85,7 @@ public class LibraryMail
         }
     }
 
-    private static void processMessage(Message message)
+    private static void processMessage(Message message) throws MessagingException
     {
         String subject = message.getSubject();
 
@@ -110,5 +93,22 @@ public class LibraryMail
         {
 
         }
+    }
+
+    public static BookInfo[] generateDummyInfo()
+    {
+        BookInfo[] bookInfos = new BookInfo[10];
+        for(int i = 0; i < 10; i++)
+        {
+            bookInfos[i].issuedTo = "ABC xyz";
+            bookInfos[i].dueDate = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(2019, 2, 13);
+            bookInfos[i].dueDate = calendar.getTime();
+
+            bookInfos[i].accessionNumber = "1234";
+            bookInfos[i].name = "BOOK Name!";
+        }
+        return bookInfos;
     }
 }
