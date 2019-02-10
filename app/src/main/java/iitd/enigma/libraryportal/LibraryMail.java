@@ -111,14 +111,9 @@ public class LibraryMail
         BookInfo[] bookInfos = new BookInfo[10];
         for(int i = 0; i < 10; i++)
         {
-            bookInfos[i].issuedTo = "ABC xyz";
-            bookInfos[i].dueDate = new Date();
             Calendar calendar = Calendar.getInstance();
             calendar.set(2019, 2, 13);
-            bookInfos[i].dueDate = calendar.getTime();
-
-            bookInfos[i].accessionNumber = "1234";
-            bookInfos[i].name = "BOOK Name!";
+            bookInfos[i] = new BookInfo("1234","ABC xyz", calendar.getTime() , "BOOK Name!");
         }
         return bookInfos;
     }
