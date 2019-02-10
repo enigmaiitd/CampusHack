@@ -1,13 +1,20 @@
 package iitd.enigma.libraryportal;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import iitd.enigma.libraryportal.Adapters.CustomRecyclerAdapter;
 
@@ -16,9 +23,11 @@ public class Library_Info_Activity extends Activity {
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
+    ImageButton mSettingButton;
 
     String username;
     String password;
+
 
     UserBooksDB userBooksDB;
 
@@ -32,36 +41,48 @@ public class Library_Info_Activity extends Activity {
         username = intent.getStringExtra("username");
         password = intent.getStringExtra("password");
 
+        mSettingButton = (ImageButton) findViewById(R.id.settingsButton_activityli) ;
+        mSettingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowPop();
+            }
+        });
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView_acitivityli);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         //String[] mDataSet = {"first", "second", "third"};
         //LibraryMail.get(username,password,getApplicationContext());
-        UserBooksDB.BookInfo[] dummyInfo = LibraryMail.generateDummyInfo();
+        //UserBooksDB.BookInfo[] dummyInfo = LibraryMail.generateDummyInfo();
 
-
-
+        userBooksDB = new UserBooksDB(getApplicationContext());
         new RetrieveFeedTask().execute("");
-
-        /*
-        runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-
-                LibraryMail.get(username, password, Library_Info_Activity.this, userBooksDB);
-                UserBooksDB.BookInfo[] booksInfo = userBooksDB.getBooks();
-                for (UserBooksDB.BookInfo bookInfo : booksInfo) {
-                    Log.i("LibraryMail", bookInfo.name);
-                }
-
-
-            }
-        });
-        */
     }
 
+    void ShowPop(){
+        //Creating the instance of PopupMenu
+        PopupMenu popupMenu = new PopupMenu(Library_Info_Activity.this, mSettingButton);
+        //Inflating the Popup using xml file
+        popupMenu.getMenuInflater().inflate(R.menu.settings, popupMenu.getMenu());
+        //registering popup with OnMenuItemClickListener
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                if("Log Out".equals(menuItem.getTitle())){
+                    Toast.makeText(Library_Info_Activity.this,"You Clicked : " + menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
+                    sharedPreferences.edit().putString("username", null).apply();
+                    sharedPreferences.edit().putString("password", null).apply();
+                    finish();
+                }
+
+                return false;
+            }
+        });
+        popupMenu.show();
+    }
 
     @Override
     protected void onResume() {

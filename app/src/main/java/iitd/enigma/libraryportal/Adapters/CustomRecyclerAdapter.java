@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import iitd.enigma.libraryportal.BookInfo;
@@ -17,18 +19,23 @@ import iitd.enigma.libraryportal.R;
 import iitd.enigma.libraryportal.UserBooksDB;
 
 class MyViewHolder extends RecyclerView.ViewHolder{
-    public TextView mTextView;
+    public TextView mBookName;
+    public TextView mAccNo;
+    public TextView mDueDate;
     public MyViewHolder(View v){
         super(v);
-        mTextView = (TextView) v.findViewById(R.id.Bookname_activitybr);
+        mBookName = (TextView) v.findViewById(R.id.Bookname_activitybr);
+        mAccNo = (TextView) v.findViewById(R.id.AccNo_activitybr);
+        mDueDate = (TextView) v.findViewById(R.id.Duedata_activitybr);
     }
 }
 
 public class CustomRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private UserBooksDB.BookInfo[] bookInfos;
-
+    DateFormat dateFormat;
     public CustomRecyclerAdapter(UserBooksDB.BookInfo[] Dataset){
         bookInfos = Dataset;
+        dateFormat = new SimpleDateFormat("dd-mm-yyyy");
     }
 
 
@@ -42,7 +49,9 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        myViewHolder.mTextView.setText(bookInfos[i].name);
+        myViewHolder.mBookName.setText(bookInfos[i].name);
+        myViewHolder.mAccNo.setText(bookInfos[i].accessionNumber);
+        myViewHolder.mDueDate.setText(dateFormat.format(bookInfos[i].dueDate));
     }
 
     @Override
