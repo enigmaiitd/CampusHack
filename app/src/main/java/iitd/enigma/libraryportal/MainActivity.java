@@ -1,5 +1,6 @@
 package iitd.enigma.libraryportal;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,23 +26,19 @@ public class MainActivity extends AppCompatActivity {
         final TextView mEmail = (TextView) findViewById(R.id.email_activitymain);
         final TextView mPassword = (TextView) findViewById(R.id.password_activitymain);
         TextView mLogin = (TextView) findViewById(R.id.login);
-        mLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                username = mEmail.getText().toString();// change accordingly
-                password = mPassword.getText().toString();// change accordingly
-
-                new RetrieveFeedTask().execute("");
-
-            }
-        });
 
 
         PushDownAnim.setPushDownAnimTo( mLogin)
         .setOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick( View view ){
+                username = mEmail.getText().toString();// change accordingly
+                password = mPassword.getText().toString();// change accordingly
+                //new RetrieveFeedTask().execute("");
+                Intent intent = new Intent(getApplicationContext(), Library_Info_Activity.class);
+                startActivity(intent);
+
                 Toast.makeText( MainActivity.this, "PUSH DOWN !!", Toast.LENGTH_SHORT ).show();
             }
 
