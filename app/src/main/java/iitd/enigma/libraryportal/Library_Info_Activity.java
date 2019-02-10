@@ -32,7 +32,7 @@ public class Library_Info_Activity extends Activity {
         String[] mDataSet = {"first", "second", "third"};
         //LibraryMail.get(username,password,getApplicationContext());
 
-        BookInfo[] dummyInfo = LibraryMail.generateDummyInfo();
+        UserBooksDB.BookInfo[] dummyInfo = LibraryMail.generateDummyInfo();
         mAdapter = new CustomRecyclerAdapter(dummyInfo);
 
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));

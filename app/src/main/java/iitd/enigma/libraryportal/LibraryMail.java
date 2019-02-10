@@ -1,11 +1,11 @@
 package iitd.enigma.libraryportal;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -15,13 +15,8 @@ import java.io.ObjectOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.mail.Address;
-import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
 import javax.mail.search.AndTerm;
 import javax.mail.search.ComparisonTerm;
@@ -33,10 +28,10 @@ import javax.mail.search.SubjectTerm;
 
 public class LibraryMail
 {
-    public static BookInfo[] bookInfos;
+    public static UserBooksDB.BookInfo[] bookInfos;
     private static Date lastReceivedDate;
 
-    static void get(String username, String password, Context context)
+    static void get(String username, String password, Context context, UserBooksDB userBooksDB)
     {
         String host = "mailstore.iitd.ac.in";// change accordingly
 
@@ -48,7 +43,10 @@ public class LibraryMail
             String fileName = "lastReceivedDate";
 
             SearchTerm fromLibraryTerm = new FromTerm(new InternetAddress("library@iitd.ac.in"));
-            SearchTerm subjectTerm = new AndTerm(new SubjectTerm("Central Library Book(s) Issue Slip"), fromLibraryTerm);
+            SearchTerm subjectIssuedTerm = new AndTerm(
+                    new SubjectTerm("Central Library Book(s) Issue Slip"), fromLibraryTerm);
+            SearchTerm subjectReturnedTerm = new AndTerm(
+                    new SubjectTerm("Central Library Book(s) Return Slip"), fromLibraryTerm);
             SearchTerm andTerm;
 
             try
@@ -58,21 +56,34 @@ public class LibraryMail
                 lastReceivedDate = (Date) ois.readObject();
 
                 SearchTerm olderThan = new ReceivedDateTerm(ComparisonTerm.GE, lastReceivedDate);
-                andTerm = new AndTerm(subjectTerm, olderThan);
+                andTerm = new AndTerm(subjectIssuedTerm, olderThan);
             }
             catch (FileNotFoundException fe)
             {
-                andTerm = subjectTerm;
+                andTerm = subjectIssuedTerm;
             }
 
-            Message[] messages = mailService.search(andTerm);
+            Message[] messages = mailService.search(new AndTerm(fromLibraryTerm, subjectIssuedTerm));
 
             for(Message message : messages)
             {
-                processIssueMessage(message);
+                processIssuedMessage(message, userBooksDB);
             }
 
             lastReceivedDate = messages[messages.length - 1].getReceivedDate();
+
+            messages = mailService.search(subjectReturnedTerm);
+
+            for(Message message : messages)
+            {
+                processReturnedMessage(message, userBooksDB);
+            }
+
+            Date d = messages[messages.length - 1].getReceivedDate();
+            if(d.compareTo(lastReceivedDate) > 0)
+            {
+                lastReceivedDate = d;
+            }
 
             FileOutputStream outputStream;
             try
@@ -95,25 +106,42 @@ public class LibraryMail
         }
     }
 
-    private static void processIssueMessage(Message message) throws MessagingException, IOException
+    private static void processIssuedMessage(Message message, UserBooksDB userBooksDB)
+            throws MessagingException, IOException
     {
-        Log.i("LibraryMail", "Processed Issue Message");
-        String subject = message.getSubject();
+        Log.i("LibraryMail", "Processing Issue Message");
+
         String messageString = new ReadMessage().getTextFromMessage(message);
-        BookInfo[] b = MessageParser.infoIssue(messageString);
-        /* MessageParser to be used here. TODO */
+        UserBooksDB.BookInfo[] booksInfo = MessageParser.infoIssue(messageString);
 
-
+        userBooksDB.addBooks(booksInfo);
     }
 
-    public static BookInfo[] generateDummyInfo()
+    private static void processReturnedMessage(Message message, UserBooksDB userBooksDB)
+            throws MessagingException, IOException
     {
-        BookInfo[] bookInfos = new BookInfo[10];
+        Log.i("LibraryMail", "Processing Return Message");
+
+        String messageString = new ReadMessage().getTextFromMessage(message);
+        UserBooksDB.BookInfo[] booksInfo = MessageParser.infoReturn(messageString);
+
+        userBooksDB.deleteBooks(booksInfo);
+    }
+
+    public static UserBooksDB.BookInfo[] generateDummyInfo()
+    {
+        UserBooksDB.BookInfo[] bookInfos = new UserBooksDB.BookInfo[10];
         for(int i = 0; i < 10; i++)
         {
+            bookInfos[i] = new UserBooksDB.BookInfo();
+            bookInfos[i].issuedTo = "ABC xyz";
+            bookInfos[i].dueDate = new Date();
             Calendar calendar = Calendar.getInstance();
             calendar.set(2019, 2, 13);
-            bookInfos[i] = new BookInfo("1234","ABC xyz", calendar.getTime() , "BOOK Name!");
+            bookInfos[i].dueDate = calendar.getTime();
+
+            bookInfos[i].accessionNumber = "1234";
+            bookInfos[i].name = "BOOK Name!";
         }
         return bookInfos;
     }

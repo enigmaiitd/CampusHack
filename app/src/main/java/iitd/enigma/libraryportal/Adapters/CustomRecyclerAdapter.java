@@ -14,6 +14,7 @@ import java.util.Date;
 
 import iitd.enigma.libraryportal.BookInfo;
 import iitd.enigma.libraryportal.R;
+import iitd.enigma.libraryportal.UserBooksDB;
 
 class MyViewHolder extends RecyclerView.ViewHolder{
     public TextView mTextView;
@@ -24,10 +25,10 @@ class MyViewHolder extends RecyclerView.ViewHolder{
 }
 
 public class CustomRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
-    private BookInfo[] mDataset;
+    private UserBooksDB.BookInfo[] bookInfos;
 
-    public CustomRecyclerAdapter(BookInfo[] Dataset){
-        mDataset = Dataset;
+    public CustomRecyclerAdapter(UserBooksDB.BookInfo[] Dataset){
+        bookInfos = Dataset;
     }
 
 
@@ -41,11 +42,11 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        myViewHolder.mTextView.setText(mDataset[i].name);
+        myViewHolder.mTextView.setText(bookInfos[i].name);
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return bookInfos.length;
     }
 }

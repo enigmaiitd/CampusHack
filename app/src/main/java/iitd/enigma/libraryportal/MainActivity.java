@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,13 +17,12 @@ public class MainActivity extends AppCompatActivity {
     String username;
     String password;
 
-
+    UserBooksDB userBooksDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         final TextView mEmail = (TextView) findViewById(R.id.email_activitymain);
         final TextView mPassword = (TextView) findViewById(R.id.password_activitymain);
@@ -46,8 +46,21 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        userBooksDB = new UserBooksDB(getApplicationContext());
+    }
 
 
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        userBooksDB.closeDB();
     }
 
 
@@ -57,8 +70,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            LibraryMail.get(username, password, MainActivity.this);
-
+            LibraryMail.get(username, password, MainActivity.this, userBooksDB);
+            UserBooksDB.BookInfo[] booksInfo =  userBooksDB.getBooks();
+            for(UserBooksDB.BookInfo bookInfo : booksInfo)
+            {
+                Log.i("LibraryMail", bookInfo.name);
+            }
             return null;
         }
 
