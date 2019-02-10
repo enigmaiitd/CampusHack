@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     String username;
     String password;
 
-    UserBooksDB userBooksDB;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick( View view ){
                 username = mEmail.getText().toString();// change accordingly
                 password = mPassword.getText().toString();// change accordingly
-                new RetrieveFeedTask().execute("");
-                //Intent intent = new Intent(getApplicationContext(), Library_Info_Activity.class);
-                //intent.putExtra("username", username);
-                //intent.putExtra("password", password);
-                //startActivity(intent);
+                //new RetrieveFeedTask().execute("");
+                Intent intent = new Intent(getApplicationContext(), Library_Info_Activity.class);
+                intent.putExtra("username", username);
+                intent.putExtra("password", password);
+                startActivity(intent);
 
                 Toast.makeText( MainActivity.this, "PUSH DOWN !!", Toast.LENGTH_SHORT ).show();
             }
@@ -48,41 +48,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        userBooksDB = new UserBooksDB(getApplicationContext());
-    }
 
 
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-        userBooksDB.closeDB();
-    }
 
 
-    class RetrieveFeedTask extends AsyncTask<String, Void, String> {
-
-        private Exception exception;
-
-        @Override
-        protected String doInBackground(String... strings) {
-            LibraryMail.get(username, password, MainActivity.this, userBooksDB);
-            UserBooksDB.BookInfo[] booksInfo =  userBooksDB.getBooks();
-            for(UserBooksDB.BookInfo bookInfo : booksInfo)
-            {
-                Log.i("LibraryMail", bookInfo.name);
-            }
-            return null;
-        }
-
-        protected void onPostExecute(String feed) {
-            // TODO: check this.exception
-            // TODO: do something with the feed
-        }
-    }
 
 }
