@@ -28,7 +28,7 @@ public class AddNewBook_Activity extends Activity {
                 bookInfo.name = mBookName.getText().toString();
                 bookInfo.accessionNumber = mAccno.getText().toString();
                 bookInfo.issuedTo = mIssuedTo.getText().toString();
-
+                finish();
             }
         });
 
