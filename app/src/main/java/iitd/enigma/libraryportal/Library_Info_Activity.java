@@ -59,7 +59,7 @@ public class Library_Info_Activity extends Activity {
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
 
-        //userBooksDB = new UserBooksDB(getApplicationContext());
+        userBooksDB = new UserBooksDB(getApplicationContext());
         new RetrieveFeedTask().execute("");
     }
 

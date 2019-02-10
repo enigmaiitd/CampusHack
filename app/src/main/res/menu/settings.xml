@@ -5,5 +5,17 @@
         android:id="@+id/LogOut_settingsmenu"
         android:title="Log Out"
         app:showAsAction="never"
-        android:icon="@drawable/ic_logout"></item>
+        android:icon="@drawable/ic_logout"
+        android:orderInCategory="1">
+    </item>
+
+    <item
+        android:id="@+id/SyncFrequency_settingsmenu"
+        android:title="Sync Frequency"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_logout"
+        android:orderInCategory="0">
+    </item>
+
+
 </menu>

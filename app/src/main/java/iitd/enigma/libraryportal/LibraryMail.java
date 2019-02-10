@@ -5,7 +5,9 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -93,7 +95,7 @@ public class LibraryMail
         catch (Exception ex)
         {
             Log.e("LibraryMail", ex.getLocalizedMessage());
-        }
+                    }
     }
 
     private static void processIssuedMessage(Message message, UserBooksDB userBooksDB)

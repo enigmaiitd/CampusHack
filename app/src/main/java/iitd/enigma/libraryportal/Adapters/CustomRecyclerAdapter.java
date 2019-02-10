@@ -35,7 +35,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
     DateFormat dateFormat;
     public CustomRecyclerAdapter(UserBooksDB.BookInfo[] Dataset){
         bookInfos = Dataset;
-        dateFormat = new SimpleDateFormat("dd-mm-yyyy");
+        dateFormat = new SimpleDateFormat("dd-MMM-yyyy EE");
     }
 
 
