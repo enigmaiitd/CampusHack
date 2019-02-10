@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 mSource = source; // Store char sequence
             }
             public char charAt(int index) {
-                return '*'; // This is the important part
+                return '•'; // This is the important part
             }
             public int length() {
                 return mSource.length(); // Return default
