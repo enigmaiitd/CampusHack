@@ -107,6 +107,7 @@ public class LibraryMail
         UserBooksDB.BookInfo[] bookInfos = new UserBooksDB.BookInfo[10];
         for(int i = 0; i < 10; i++)
         {
+            bookInfos[i] = new UserBooksDB.BookInfo();
             bookInfos[i].issuedTo = "ABC xyz";
             bookInfos[i].dueDate = new Date();
             Calendar calendar = Calendar.getInstance();
