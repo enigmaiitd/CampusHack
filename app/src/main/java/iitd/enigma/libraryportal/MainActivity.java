@@ -1,6 +1,7 @@
 package iitd.enigma.libraryportal;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText( MainActivity.this, "PUSH DOWN !!", Toast.LENGTH_SHORT ).show();
             }
 
-        } );
+        });
 
 
     }
@@ -54,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            LibraryMail.get(username, password);
+            LibraryMail.get(username, password, MainActivity.this);
+
             return null;
         }
 

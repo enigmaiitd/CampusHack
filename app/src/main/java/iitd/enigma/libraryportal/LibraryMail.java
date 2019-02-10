@@ -1,26 +1,47 @@
 package iitd.enigma.libraryportal;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.mail.Address;
+import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.internet.InternetAddress;
+import javax.mail.search.AndTerm;
+import javax.mail.search.ComparisonTerm;
+import javax.mail.search.FromTerm;
+import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
+import javax.mail.search.SubjectTerm;
 
 class BookInfo
 {
     public String accessionNumber;
     public String name;
-    public Date due_date;
+    public Date dueDate;
     public String issuedTo;
 
-    BookInfo(String accessionNumber, String name, Date due_date, String issuedTo)
+    BookInfo(String accessionNumber, String name, Date dueDate, String issuedTo)
     {
         this.accessionNumber = accessionNumber;
         this.name = name;
-        this.due_date = due_date;
+        this.dueDate = dueDate;
         this.issuedTo = issuedTo;
     }
 
@@ -29,81 +50,92 @@ class BookInfo
 public class LibraryMail
 {
     public static BookInfo[] bookInfos;
+    private static Date lastReceivedDate;
 
-    public static void get(String username, String password)
+    static void get(String username, String password, Context context)
     {
-        String host = "mailstore.iitd.ac.in";// change accordinglya
+        String host = "mailstore.iitd.ac.in";// change accordingly
 
         try
         {
-            // It is good to Use Tag Library to display dynamic content
             MailService mailService = new MailService();
             mailService.login(host, username, password);
-            /*int messageCount = mailService.getMessageCount();
 
-            //just for tutorial purpose
-            if (messageCount > 5)   messageCount = 5;
-            Message[] messages = mailService.getMessages();
+            String fileName = "lastReceivedDate";
 
-            for (int i = 0; i < messageCount; i++)
+            SearchTerm fromLibraryTerm = new FromTerm(new InternetAddress("library@iitd.ac.in"));
+            SearchTerm subjectTerm = new AndTerm(new SubjectTerm("Central Library Book(s) Issue Slip"), fromLibraryTerm);
+            SearchTerm andTerm;
+
+            try
             {
-                String subject = "";
-                if (messages[i].getSubject() != null)
-                {
-                    subject = messages[i].getSubject();
-                }
+                FileInputStream fis = context.openFileInput(fileName);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                lastReceivedDate = (Date) ois.readObject();
 
-                Address[] fromAddress = messages[i].getFrom();
-
-                Log.d("Email Check", subject);
-            }*/
-
-            SearchTerm term = new SearchTerm()
+                SearchTerm olderThan = new ReceivedDateTerm(ComparisonTerm.GE, lastReceivedDate);
+                andTerm = new AndTerm(subjectTerm, olderThan);
+            }
+            catch (FileNotFoundException fe)
             {
-                public boolean match(Message message)
-                {
-                    try
-                    {
-                        Address[] addresses = message.getFrom();
-                        if(addresses.length != 1)
-                        {
-                            return false;
-                        }
-                        String address = addresses[0].toString();
-                        if(address.equals("library@iitd.ac.in"))
-                        {
-                            return true;
-                        }
-                    }
-                    catch (MessagingException ex)
-                    {
-                        ex.printStackTrace();
-                    }
-                    return false;
-                }
-            };
+                andTerm = subjectTerm;
+            }
 
-            Message[] messages = mailService.search(term);
+            Message[] messages = mailService.search(andTerm);
 
             for(Message message : messages)
             {
-                processMessage(message);
+                processIssueMessage(message);
             }
 
+            lastReceivedDate = messages[messages.length - 1].getReceivedDate();
+
+            FileOutputStream outputStream;
+            try
+            {
+                outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            }
+            catch(FileNotFoundException fi)
+            {
+                outputStream = new FileOutputStream(context.getFilesDir().getPath() + "/" + fileName);
+            }
+            ObjectOutputStream oos = new ObjectOutputStream(outputStream);
+            oos.writeObject(lastReceivedDate);
+
+            Log.i("LibraryMail", lastReceivedDate.toString());
             mailService.logout();
         }
         catch (Exception ex)
         {
-            Log.e("Email Check", ex.toString());
+            Log.e("LibraryMail", ex.getLocalizedMessage());
         }
     }
 
-    private static void processMessage(Message message) throws Exception
+    private static void processIssueMessage(Message message) throws MessagingException, IOException
     {
+        Log.i("LibraryMail", "Processed Issue Message");
         String subject = message.getSubject();
-        if(subject.equals("Central Library Book(s) Issue Slip"))
-        {
+        String messageString = new ReadMessage().getTextFromMessage(message);
+        BookInfo[] b = MessageParser.infoIssue(messageString);
+        /* MessageParser to be used here. TODO */
 
+
+    }
+
+    public static BookInfo[] generateDummyInfo()
+    {
+        BookInfo[] bookInfos = new BookInfo[10];
+        for(int i = 0; i < 10; i++)
+        {
+            bookInfos[i].issuedTo = "ABC xyz";
+            bookInfos[i].dueDate = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(2019, 2, 13);
+            bookInfos[i].dueDate = calendar.getTime();
+
+            bookInfos[i].accessionNumber = "1234";
+            bookInfos[i].name = "BOOK Name!";
         }
+        return bookInfos;
     }
 }
