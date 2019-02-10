@@ -54,9 +54,12 @@ public class Library_Info_Activity extends Activity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         //String[] mDataSet = {"first", "second", "third"};
         //LibraryMail.get(username,password,getApplicationContext());
-        //UserBooksDB.BookInfo[] dummyInfo = LibraryMail.generateDummyInfo();
+        UserBooksDB.BookInfo[] dummyInfo = LibraryMail.generateDummyInfo();
+        mAdapter = new CustomRecyclerAdapter(dummyInfo);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
+        mRecyclerView.setAdapter(mAdapter);
 
-        userBooksDB = new UserBooksDB(getApplicationContext());
+        //userBooksDB = new UserBooksDB(getApplicationContext());
         new RetrieveFeedTask().execute("");
     }
 
@@ -75,12 +78,14 @@ public class Library_Info_Activity extends Activity {
                     SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
                     sharedPreferences.edit().putString("username", null).apply();
                     sharedPreferences.edit().putString("password", null).apply();
+                    LibraryMail.cleanup(Library_Info_Activity.this, userBooksDB);
                     finish();
                 }
 
                 return false;
             }
         });
+
         popupMenu.show();
     }
 
@@ -105,10 +110,12 @@ public class Library_Info_Activity extends Activity {
         protected UserBooksDB.BookInfo[] doInBackground(String... strings) {
             LibraryMail.get(username, password, Library_Info_Activity.this, userBooksDB);
             UserBooksDB.BookInfo[] booksInfo =  userBooksDB.getBooks();
+            Log.i("LibraryMail", "I reached here " + booksInfo.length);
             for(UserBooksDB.BookInfo bookInfo : booksInfo)
             {
                 Log.i("LibraryMail", bookInfo.name);
             }
+            Log.i("LibraryMail", "I reached 2 here");
             return booksInfo;
         }
 
@@ -116,8 +123,7 @@ public class Library_Info_Activity extends Activity {
             // TODO: check this.exception
             // TODO: do something with the feed
             mAdapter = new CustomRecyclerAdapter(booksInfo);
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
-            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.swapAdapter(mAdapter, false);
         }
     }
 
