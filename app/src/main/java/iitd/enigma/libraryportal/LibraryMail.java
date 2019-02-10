@@ -43,7 +43,10 @@ public class LibraryMail
             String fileName = "lastReceivedDate";
 
             SearchTerm fromLibraryTerm = new FromTerm(new InternetAddress("library@iitd.ac.in"));
-            SearchTerm subjectTerm = new AndTerm(new SubjectTerm("Central Library Book(s) Issue Slip"), fromLibraryTerm);
+            SearchTerm subjectIssuedTerm = new AndTerm(
+                    new SubjectTerm("Central Library Book(s) Issue Slip"), fromLibraryTerm);
+            SearchTerm subjectReturnedTerm = new AndTerm(
+                    new SubjectTerm("Central Library Book(s) Return Slip"), fromLibraryTerm);
             SearchTerm andTerm;
 
             try
@@ -53,14 +56,14 @@ public class LibraryMail
                 lastReceivedDate = (Date) ois.readObject();
 
                 SearchTerm olderThan = new ReceivedDateTerm(ComparisonTerm.GE, lastReceivedDate);
-                andTerm = new AndTerm(subjectTerm, olderThan);
+                andTerm = new AndTerm(subjectIssuedTerm, olderThan);
             }
             catch (FileNotFoundException fe)
             {
-                andTerm = subjectTerm;
+                andTerm = subjectIssuedTerm;
             }
 
-            Message[] messages = mailService.search(new AndTerm(fromLibraryTerm, subjectTerm));
+            Message[] messages = mailService.search(new AndTerm(fromLibraryTerm, subjectIssuedTerm));
 
             for(Message message : messages)
             {
@@ -68,6 +71,19 @@ public class LibraryMail
             }
 
             lastReceivedDate = messages[messages.length - 1].getReceivedDate();
+
+            messages = mailService.search(subjectReturnedTerm);
+
+            for(Message message : messages)
+            {
+                processReturnedMessage(message, userBooksDB);
+            }
+
+            Date d = messages[messages.length - 1].getReceivedDate();
+            if(d.compareTo(lastReceivedDate) > 0)
+            {
+                lastReceivedDate = d;
+            }
 
             FileOutputStream outputStream;
             try
@@ -93,13 +109,23 @@ public class LibraryMail
     private static void processIssuedMessage(Message message, UserBooksDB userBooksDB)
             throws MessagingException, IOException
     {
-        Log.i("LibraryMail", "Processed Issue Message");
-        String subject = message.getSubject();
+        Log.i("LibraryMail", "Processing Issue Message");
 
         String messageString = new ReadMessage().getTextFromMessage(message);
         UserBooksDB.BookInfo[] booksInfo = MessageParser.infoIssue(messageString);
 
         userBooksDB.addBooks(booksInfo);
+    }
+
+    private static void processReturnedMessage(Message message, UserBooksDB userBooksDB)
+        throws MessagingException, IOException
+    {
+        Log.i("LibraryMail", "Processing Return Message");
+
+        String messageString = new ReadMessage().getTextFromMessage(message);
+        UserBooksDB.BookInfo[] booksInfo = MessageParser.infoReturn(messageString);
+
+        userBooksDB.deleteBooks(booksInfo);
     }
 
     public static UserBooksDB.BookInfo[] generateDummyInfo()

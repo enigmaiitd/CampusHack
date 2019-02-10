@@ -40,7 +40,7 @@ class UserBooksDB
     {
         @NonNull
         @PrimaryKey
-        String accessionNumber;
+        String accessionNumber = "INVALID";
 
         @ColumnInfo(name = "book_name")
         String name;
@@ -61,7 +61,6 @@ class UserBooksDB
             this.dueDate = dueDate;
         }
     }
-
 
     @Dao
     interface BookDao

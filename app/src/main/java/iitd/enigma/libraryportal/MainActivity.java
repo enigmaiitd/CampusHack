@@ -16,9 +16,7 @@ public class MainActivity extends AppCompatActivity {
     String username;
     String password;
 
-
     UserBooksDB userBooksDB;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
