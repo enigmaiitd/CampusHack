@@ -6,14 +6,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MessageParser {
-    public static BookInfo[] infoIssue(String messageString) {
+    public static UserBooksDB.BookInfo[] infoIssue(String messageString) {
         //since function written according to whitespaces
         messageString = messageString.replace("\t", "        ");
 
         String accNo;
         String name;
         Date dueDate = new Date();
-        String IssuedTo;
+        String issuedTo;
         String EntryNo;//if required
 
         String[] lines;
@@ -42,7 +42,7 @@ public class MessageParser {
 
         String nameInfo = lines[count].trim(); //trimming whitespaces
         String[] NameAndNo = nameInfo.split("\\(|\\)");//splitting by ( or )
-        IssuedTo = NameAndNo[0];
+        issuedTo = NameAndNo[0];
         EntryNo = NameAndNo[1];
 
         count++;
@@ -72,7 +72,7 @@ public class MessageParser {
             count++;
         }
 
-        BookInfo[] bookInfo = new BookInfo[noOfBooks];
+        UserBooksDB.BookInfo[] bookInfo = new UserBooksDB.BookInfo[noOfBooks];
 
         count = firstBook;
 
@@ -126,20 +126,20 @@ public class MessageParser {
             } catch (ParseException e) {
             }
 
-            bookInfo[i] = new BookInfo(accNo, name, dueDate, IssuedTo);
+            bookInfo[i] = new UserBooksDB.BookInfo(accNo, name, issuedTo, dueDate);
         }
 
         return bookInfo;
     }
 
-    public static BookInfo[] infoReturn(String messageString) {
+    public static UserBooksDB.BookInfo[] infoReturn(String messageString) {
         //since function written according to whitespaces
         messageString = messageString.replace("\t", "        ");
 
         String accNo;
         String name;
         Date dueDate = new Date();
-        String IssuedTo;
+        String issuedTo;
         String EntryNo;//if required
 
         String[] lines;
@@ -168,7 +168,7 @@ public class MessageParser {
 
         String nameInfo = lines[count].trim(); //trimming whitespaces
         String[] NameAndNo = nameInfo.split("\\(|\\)");//splitting by ( or )
-        IssuedTo = NameAndNo[0];
+        issuedTo = NameAndNo[0];
         EntryNo = NameAndNo[1];
 
         count++;
@@ -198,7 +198,7 @@ public class MessageParser {
             count++;
         }
 
-        BookInfo[] bookInfo = new BookInfo[noOfBooks];
+        UserBooksDB.BookInfo[] bookInfo = new UserBooksDB.BookInfo[noOfBooks];
 
         count = firstBook;
 
@@ -252,7 +252,7 @@ public class MessageParser {
             } catch (ParseException e) {
             }
 
-            bookInfo[i] = new BookInfo(accNo, name, dueDate, IssuedTo);
+            bookInfo[i] = new UserBooksDB.BookInfo(accNo, name, issuedTo, dueDate);
         }
 
         return bookInfo;
