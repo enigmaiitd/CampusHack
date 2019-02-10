@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/parent_activityli"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Current Issued Books"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:textColor="#000"
+        android:gravity="center"
+        android:id="@+id/info_activityli"/>
+
+    <TextView
+        android:id="@+id/loading_activityli"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/info_activityli"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loading..."/>
+
+<android.support.v7.widget.RecyclerView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="80dp"
+    android:layout_below="@+id/info_activityli"
+    android:id="@+id/recyclerView_acitivityli">
+</android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/userName_activityli"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="..."
+        android:layout_marginBottom="-50dp"
+        android:layout_alignBottom="@+id/recyclerView_acitivityli"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/recyclerView_acitivityli"
+        android:layout_alignBottom="@+id/recyclerView_acitivityli"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="-70dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="20dp"
+        android:id="@+id/addButton_activityli"
+        android:src="@drawable/ic_add" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/recyclerView_acitivityli"
+        android:layout_alignRight="@id/recyclerView_acitivityli"
+        android:layout_alignBottom="@+id/recyclerView_acitivityli"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="-70dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="20dp"
+        android:id="@+id/settingsButton_activityli"
+        android:src="@drawable/ic_settings" />
+
+</RelativeLayout>

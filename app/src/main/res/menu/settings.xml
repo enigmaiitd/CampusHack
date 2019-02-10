@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/LogOut_settingsmenu"
+        android:title="Log Out"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_logout"
+        android:orderInCategory="1">
+    </item>
+
+    <item
+        android:id="@+id/SyncFrequency_settingsmenu"
+        android:title="Sync Frequency"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_logout"
+        android:orderInCategory="0">
+    </item>
+
+
+</menu>
