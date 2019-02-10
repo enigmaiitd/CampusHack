@@ -1,7 +1,9 @@
 package iitd.enigma.libraryportal;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.opengl.Visibility;
@@ -16,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,6 +36,7 @@ public class Library_Info_Activity extends Activity {
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
     ImageButton mSettingButton;
+    ImageButton mAddButton;
     RelativeLayout mainLayout;
     String username;
     String password;
@@ -57,6 +61,14 @@ public class Library_Info_Activity extends Activity {
             @Override
             public void onClick(View v) {
                 ShowPop();
+            }
+        });
+        mAddButton = (ImageButton) findViewById(R.id.addButton_activityli);
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(getApplicationContext(), AddNewBook_Activity.class);
+                startActivity(intent1);
             }
         });
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView_acitivityli);

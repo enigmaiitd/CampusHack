@@ -35,6 +35,19 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/recyclerView_acitivityli"
+        android:layout_alignBottom="@+id/recyclerView_acitivityli"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="-70dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="20dp"
+        android:id="@+id/addButton_activityli"
+        android:src="@drawable/ic_add" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignEnd="@id/recyclerView_acitivityli"
         android:layout_alignRight="@id/recyclerView_acitivityli"
         android:layout_alignBottom="@+id/recyclerView_acitivityli"

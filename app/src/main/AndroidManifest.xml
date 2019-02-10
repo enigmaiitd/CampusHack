@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Library_Info_Activity"></activity>
+        <activity android:name=".AddNewBook_Activity" android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"></activity>
     </application>
 
 </manifest>
