@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.io.FileInputStream;
@@ -40,63 +41,51 @@ public class LibraryMail
             MailService mailService = new MailService();
             mailService.login(host, username, password);
 
-            String fileName = "lastReceivedDate";
+            String lastSyncedKeyName = "lastSynced";
 
             SearchTerm fromLibraryTerm = new FromTerm(new InternetAddress("library@iitd.ac.in"));
             SearchTerm subjectIssuedTerm = new SubjectTerm("Central Library Book(s) Issue Slip");
             SearchTerm subjectReturnedTerm = new SubjectTerm("Central Library Book(s) Return Slip");
 
-            SearchTerm andTerm;
+            SearchTerm andTermIssue,
+                    andTermReturn;
 
-            try
+            SharedPreferences sharedPreferences = context.getSharedPreferences("SyncRecord", Context.MODE_PRIVATE);
+
+            if(sharedPreferences.contains(lastSyncedKeyName))
             {
-                FileInputStream fis = context.openFileInput(fileName);
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                lastReceivedDate = (Date) ois.readObject();
-
-                SearchTerm olderThan = new ReceivedDateTerm(ComparisonTerm.GE, lastReceivedDate);
-                andTerm = new AndTerm(new SearchTerm[]{subjectIssuedTerm, fromLibraryTerm, olderThan});
+                Long lastSyncedDate = sharedPreferences.getLong(lastSyncedKeyName, 0);
+                SearchTerm olderThan = new ReceivedDateTerm(ComparisonTerm.GE, new Date(lastSyncedDate));
+                andTermIssue = new AndTerm(new SearchTerm[]{subjectIssuedTerm, olderThan});
+                andTermReturn = new AndTerm(new SearchTerm[]{subjectReturnedTerm, olderThan});
+                //TODO: Add fromLibraryTerm
             }
-            catch (FileNotFoundException fe)
+            else
             {
-                andTerm = new AndTerm(subjectIssuedTerm, fromLibraryTerm);
+                andTermIssue = subjectIssuedTerm;
+                andTermReturn = subjectReturnedTerm;
+                //TODO: Add fromLibraryTerm
             }
 
-            Message[] messages = mailService.search(subjectIssuedTerm);
+            Message[] messages = mailService.search(andTermIssue);
 
             for(Message message : messages)
             {
                 processIssuedMessage(message, userBooksDB);
             }
 
-            lastReceivedDate = messages[messages.length - 1].getReceivedDate();
+            lastReceivedDate = new Date();
 
-            messages = mailService.search(subjectReturnedTerm);
+            messages = mailService.search(andTermReturn);
 
             for(Message message : messages)
             {
                 processReturnedMessage(message, userBooksDB);
             }
 
-            Date d = messages[messages.length - 1].getReceivedDate();
-            if(d.compareTo(lastReceivedDate) > 0)
-            {
-                lastReceivedDate = d;
-            }
-
-            FileOutputStream outputStream;
-            try
-            {
-                outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
-            }
-            catch(FileNotFoundException fi)
-            {
-                outputStream = new FileOutputStream(context.getFilesDir().getPath() + "/" + fileName);
-            }
-            ObjectOutputStream oos = new ObjectOutputStream(outputStream);
-            oos.writeObject(lastReceivedDate);
-
-            Log.i("LibraryMail", lastReceivedDate.toString());
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putLong(lastSyncedKeyName, new Date().getTime());
+            editor.apply();
             mailService.logout();
         }
         catch (Exception ex)
