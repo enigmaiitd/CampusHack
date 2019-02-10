@@ -58,7 +58,7 @@
         android:layout_height="50dp"
         android:hint="Kerberos Password"
         android:inputType="textPassword"
-        android:textSize="16sp"
+        android:textSize="1sp"
         tools:layout_editor_absoluteX="19dp"
         tools:layout_editor_absoluteY="16dp" />
     </android.support.design.widget.TextInputLayout>
