@@ -43,10 +43,9 @@ public class LibraryMail
             String fileName = "lastReceivedDate";
 
             SearchTerm fromLibraryTerm = new FromTerm(new InternetAddress("library@iitd.ac.in"));
-            SearchTerm subjectIssuedTerm = new AndTerm(
-                    new SubjectTerm("Central Library Book(s) Issue Slip"), fromLibraryTerm);
-            SearchTerm subjectReturnedTerm = new AndTerm(
-                    new SubjectTerm("Central Library Book(s) Return Slip"), fromLibraryTerm);
+            SearchTerm subjectIssuedTerm = new SubjectTerm("Central Library Book(s) Issue Slip");
+            SearchTerm subjectReturnedTerm = new SubjectTerm("Central Library Book(s) Return Slip");
+
             SearchTerm andTerm;
 
             try
@@ -56,14 +55,14 @@ public class LibraryMail
                 lastReceivedDate = (Date) ois.readObject();
 
                 SearchTerm olderThan = new ReceivedDateTerm(ComparisonTerm.GE, lastReceivedDate);
-                andTerm = new AndTerm(subjectIssuedTerm, olderThan);
+                andTerm = new AndTerm(new SearchTerm[]{subjectIssuedTerm, fromLibraryTerm, olderThan});
             }
             catch (FileNotFoundException fe)
             {
-                andTerm = subjectIssuedTerm;
+                andTerm = new AndTerm(subjectIssuedTerm, fromLibraryTerm);
             }
 
-            Message[] messages = mailService.search(new AndTerm(fromLibraryTerm, subjectIssuedTerm));
+            Message[] messages = mailService.search(subjectIssuedTerm);
 
             for(Message message : messages)
             {
