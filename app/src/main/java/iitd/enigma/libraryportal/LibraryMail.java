@@ -119,7 +119,8 @@ public class LibraryMail {
         editor.apply();
     }
 
-    public static UserBooksDB.BookInfo[] generateDummyInfo() {
+    static UserBooksDB.BookInfo[] generateDummyInfo()
+    {
         UserBooksDB.BookInfo[] bookInfos = new UserBooksDB.BookInfo[10];
         for (int i = 0; i < 10; i++) {
             bookInfos[i] = new UserBooksDB.BookInfo();
@@ -134,4 +135,6 @@ public class LibraryMail {
         }
         return bookInfos;
     }
+
+
 }
