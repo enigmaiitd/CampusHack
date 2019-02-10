@@ -31,6 +31,9 @@ public class LibraryMail
 {
     public static UserBooksDB.BookInfo[] bookInfos;
     private static Date lastReceivedDate;
+    private static String SharedPrefName = "SyncRecord";
+    private static String lastSyncedKeyName = "lastSynced";
+
 
     static void get(String username, String password, Context context, UserBooksDB userBooksDB)
     {
@@ -41,7 +44,6 @@ public class LibraryMail
             MailService mailService = new MailService();
             mailService.login(host, username, password);
 
-            String lastSyncedKeyName = "lastSynced";
 
             SearchTerm fromLibraryTerm = new FromTerm(new InternetAddress("library@iitd.ac.in"));
             SearchTerm subjectIssuedTerm = new SubjectTerm("Central Library Book(s) Issue Slip");
@@ -50,7 +52,7 @@ public class LibraryMail
             SearchTerm andTermIssue,
                     andTermReturn;
 
-            SharedPreferences sharedPreferences = context.getSharedPreferences("SyncRecord", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = context.getSharedPreferences(SharedPrefName, Context.MODE_PRIVATE);
 
             if(sharedPreferences.contains(lastSyncedKeyName))
             {
@@ -114,6 +116,15 @@ public class LibraryMail
         UserBooksDB.BookInfo[] booksInfo = MessageParser.infoReturn(messageString);
 
         userBooksDB.deleteBooks(booksInfo);
+    }
+
+    static void cleanup(Context context, UserBooksDB userBooksDB)
+    {
+        userBooksDB.deleteAllBooks();
+        SharedPreferences sharedPref = context.getSharedPreferences(SharedPrefName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove(lastSyncedKeyName);
+        editor.apply();
     }
 
     public static UserBooksDB.BookInfo[] generateDummyInfo()

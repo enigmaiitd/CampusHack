@@ -73,6 +73,9 @@ public class UserBooksDB
 
         @Delete
         void delete(BookInfo book);
+
+        @Query("DELETE FROM BookInfo")
+        void deleteAllInfo();
     }
 
     @Database(entities = {BookInfo.class}, version = 1, exportSchema = false)
@@ -104,6 +107,11 @@ public class UserBooksDB
         {
             db.bookDao().delete(bookInfo);
         }
+    }
+
+    void deleteAllBooks()
+    {
+        db.bookDao().deleteAllInfo();
     }
 
     void closeDB()
