@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Date;
+
+import iitd.enigma.libraryportal.BookInfo;
 import iitd.enigma.libraryportal.R;
 
 class MyViewHolder extends RecyclerView.ViewHolder{
@@ -21,9 +24,9 @@ class MyViewHolder extends RecyclerView.ViewHolder{
 }
 
 public class CustomRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
-    private String[] mDataset;
+    private BookInfo[] mDataset;
 
-    public CustomRecyclerAdapter(String[] Dataset){
+    public CustomRecyclerAdapter(BookInfo[] Dataset){
         mDataset = Dataset;
     }
 
@@ -38,7 +41,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        myViewHolder.mTextView.setText(mDataset[i]);
+        myViewHolder.mTextView.setText(mDataset[i].name);
     }
 
     @Override

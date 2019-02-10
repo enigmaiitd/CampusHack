@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
                 password = mPassword.getText().toString();// change accordingly
                 //new RetrieveFeedTask().execute("");
                 Intent intent = new Intent(getApplicationContext(), Library_Info_Activity.class);
+                //intent.putExtra("username", username);
+                //intent.putExtra("password", password);
                 startActivity(intent);
 
                 Toast.makeText( MainActivity.this, "PUSH DOWN !!", Toast.LENGTH_SHORT ).show();
