@@ -113,11 +113,34 @@ public class LibraryMail {
     }
 
     static void cleanup(Context context, UserBooksDB userBooksDB) {
-        userBooksDB.deleteAllBooks();
+        new CleanUpTask(userBooksDB).execute();
         SharedPreferences sharedPref = context.getSharedPreferences(SharedPrefName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.remove(lastSyncedKeyName);
         editor.apply();
+    }
+
+    private static class CleanUpTask extends AsyncTask<Void, Void, Integer>
+    {
+        private UserBooksDB userBooksDB = null;
+
+        public CleanUpTask(UserBooksDB userBooksDB)
+        {
+            this.userBooksDB = userBooksDB;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... params)
+        {
+            userBooksDB.deleteAllBooks();
+            return 1;
+        }
+
+        @Override
+        protected void onPostExecute(Integer i)
+        {
+
+        }
     }
 
     static UserBooksDB.BookInfo[] generateDummyInfo()
