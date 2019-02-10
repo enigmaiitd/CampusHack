@@ -41,6 +41,7 @@ public class Library_Info_Activity extends Activity {
     String username;
     String password;
     TextView mLoading;
+    TextView mUsername;
 
     UserBooksDB userBooksDB;
 
@@ -55,6 +56,7 @@ public class Library_Info_Activity extends Activity {
         password = intent.getStringExtra("password");
         mainLayout = (RelativeLayout) findViewById(R.id.parent_activityli);
         mLoading = (TextView) findViewById(R.id.loading_activityli);
+        mUsername = (TextView) findViewById(R.id.userName_activityli);
 
         mSettingButton = (ImageButton) findViewById(R.id.settingsButton_activityli) ;
         mSettingButton.setOnClickListener(new View.OnClickListener() {
@@ -159,6 +161,7 @@ public class Library_Info_Activity extends Activity {
             // TODO: do something with the feed
             mLoading.setVisibility(View.GONE);
             if(exception == null){
+                mUsername.setText(booksInfo[0].issuedTo);
                 mAdapter = new CustomRecyclerAdapter(booksInfo);
                 mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter);

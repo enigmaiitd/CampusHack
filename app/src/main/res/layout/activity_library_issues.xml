@@ -32,6 +32,14 @@
     android:id="@+id/recyclerView_acitivityli">
 </android.support.v7.widget.RecyclerView>
 
+    <TextView
+        android:id="@+id/userName_activityli"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="..."
+        android:layout_marginBottom="-50dp"
+        android:layout_alignBottom="@+id/recyclerView_acitivityli"/>
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
