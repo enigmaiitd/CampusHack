@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
+            android:id="@+id/Bookname_activityabr"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="Book Name"
@@ -19,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
+            android:id="@+id/accno_activityabr"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="Accession Number"
@@ -28,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
+            android:id="@+id/issTo_activityabr"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="issued To"
@@ -35,7 +38,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/date_activityabr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="date" />
