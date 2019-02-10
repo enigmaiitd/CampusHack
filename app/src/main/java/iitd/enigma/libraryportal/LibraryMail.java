@@ -136,5 +136,13 @@ public class LibraryMail {
         return bookInfos;
     }
 
+    static void addDummyIssueInfo(UserBooksDB.BookInfo[] booksInfo, UserBooksDB userBooksDB)
+    {
+        userBooksDB.addBooks(booksInfo);
+    }
 
+    static void addDummyReturnInfo(UserBooksDB.BookInfo[] booksInfo, UserBooksDB userBooksDB)
+    {
+        userBooksDB.deleteBooks(booksInfo);
+    }
 }
