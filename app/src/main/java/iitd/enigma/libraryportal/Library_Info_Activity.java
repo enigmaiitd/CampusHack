@@ -40,9 +40,7 @@ public class Library_Info_Activity extends Activity {
         //LibraryMail.get(username,password,getApplicationContext());
         UserBooksDB.BookInfo[] dummyInfo = LibraryMail.generateDummyInfo();
 
-        mAdapter = new CustomRecyclerAdapter(dummyInfo);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
-        mRecyclerView.setAdapter(mAdapter);
+
 
         new RetrieveFeedTask().execute("");
 
@@ -62,8 +60,6 @@ public class Library_Info_Activity extends Activity {
             }
         });
         */
-
-
     }
 
 
@@ -80,24 +76,27 @@ public class Library_Info_Activity extends Activity {
         userBooksDB.closeDB();
     }
 
-    class RetrieveFeedTask extends AsyncTask<String, Void, String> {
+    class RetrieveFeedTask extends AsyncTask<String, Void, UserBooksDB.BookInfo[]> {
 
         private Exception exception;
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected UserBooksDB.BookInfo[] doInBackground(String... strings) {
             LibraryMail.get(username, password, Library_Info_Activity.this, userBooksDB);
             UserBooksDB.BookInfo[] booksInfo =  userBooksDB.getBooks();
             for(UserBooksDB.BookInfo bookInfo : booksInfo)
             {
                 Log.i("LibraryMail", bookInfo.name);
             }
-            return null;
+            return booksInfo;
         }
 
-        protected void onPostExecute(String feed) {
+        protected void onPostExecute(UserBooksDB.BookInfo[] booksInfo) {
             // TODO: check this.exception
             // TODO: do something with the feed
+            mAdapter = new CustomRecyclerAdapter(booksInfo);
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
+            mRecyclerView.setAdapter(mAdapter);
         }
     }
 
