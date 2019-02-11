@@ -161,7 +161,12 @@ public class Library_Info_Activity extends Activity {
             // TODO: do something with the feed
             mLoading.setVisibility(View.GONE);
             if(exception == null){
-                mUsername.setText(booksInfo[0].issuedTo);
+
+                if(booksInfo.length != 0){
+                    mUsername.setText(booksInfo[0].issuedTo);
+                }
+
+
                 mAdapter = new CustomRecyclerAdapter(booksInfo);
                 mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter);
