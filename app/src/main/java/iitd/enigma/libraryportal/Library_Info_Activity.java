@@ -159,11 +159,15 @@ public class Library_Info_Activity extends Activity {
         protected void onPostExecute(UserBooksDB.BookInfo[] booksInfo) {
             // TODO: check this.exception
             // TODO: do something with the feed
-            mLoading.setVisibility(View.GONE);
+
             if(exception == null){
 
                 if(booksInfo.length != 0){
                     mUsername.setText(booksInfo[0].issuedTo);
+                    mLoading.setVisibility(View.GONE);
+                }
+                else{
+                    mLoading.setText("No Books Issued");
                 }
 
 
@@ -171,6 +175,7 @@ public class Library_Info_Activity extends Activity {
                 mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter);
             }else {
+                mLoading.setVisibility(View.GONE);
                 //Toast.makeText(getApplicationContext(), exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 String error = exception.getLocalizedMessage();
                 exception.printStackTrace();
