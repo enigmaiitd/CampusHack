@@ -62,13 +62,11 @@ public class LibraryMail {
             if (sharedPreferences.contains(lastSyncedKeyName)) {
                 Long lastSyncedDate = sharedPreferences.getLong(lastSyncedKeyName, 0);
                 SearchTerm olderThan = new ReceivedDateTerm(ComparisonTerm.GE, new Date(lastSyncedDate));
-                andTermIssue = new AndTerm(new SearchTerm[]{subjectIssuedTerm, olderThan});
-                andTermReturn = new AndTerm(new SearchTerm[]{subjectReturnedTerm, olderThan});
-                //TODO: Add fromLibraryTerm
+                andTermIssue = new AndTerm(new SearchTerm[]{subjectIssuedTerm, olderThan, fromLibraryTerm});
+                andTermReturn = new AndTerm(new SearchTerm[]{subjectReturnedTerm, olderThan, fromLibraryTerm});
             } else {
-                andTermIssue = subjectIssuedTerm;
-                andTermReturn = subjectReturnedTerm;
-                //TODO: Add fromLibraryTerm
+                andTermIssue = new AndTerm(subjectIssuedTerm, fromLibraryTerm);
+                andTermReturn = new AndTerm(subjectReturnedTerm, fromLibraryTerm);
             }
 
             Message[] messages = mailService.search(andTermIssue);
