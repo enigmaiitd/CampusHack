@@ -1,6 +1,9 @@
 # Library Portal
 Library Portal is an Android app to show the list of currently issued books from IIT Library, Delhi.
 
+## Download
+[Click here to download the latest release!](https://github.com/enigmaiitd/CampusHack/releases/latest)
+
 ## About EnigmaIITD
 We are a team of undergraduates that aim to use our development skills to develop apps that could help solve
 problems people might face and ease their work through software.
