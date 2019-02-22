@@ -141,30 +141,5 @@ public class LibraryMail {
         }
     }
 
-    static UserBooksDB.BookInfo[] generateDummyInfo()
-    {
-        UserBooksDB.BookInfo[] bookInfos = new UserBooksDB.BookInfo[10];
-        for (int i = 0; i < 10; i++) {
-            bookInfos[i] = new UserBooksDB.BookInfo();
-            bookInfos[i].issuedTo = "ABC xyz";
-            bookInfos[i].dueDate = new Date();
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(2019, 2, 13);
-            bookInfos[i].dueDate = calendar.getTime();
 
-            bookInfos[i].accessionNumber = "1234";
-            bookInfos[i].name = "BOOK Name!";
-        }
-        return bookInfos;
-    }
-
-    static void addDummyIssueInfo(UserBooksDB.BookInfo[] booksInfo, UserBooksDB userBooksDB)
-    {
-        userBooksDB.addBooks(booksInfo);
-    }
-
-    static void addDummyReturnInfo(UserBooksDB.BookInfo[] booksInfo, UserBooksDB userBooksDB)
-    {
-        userBooksDB.deleteBooks(booksInfo);
-    }
 }
