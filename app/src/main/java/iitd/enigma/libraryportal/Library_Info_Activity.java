@@ -54,18 +54,19 @@ public class Library_Info_Activity extends Activity {
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
         password = intent.getStringExtra("password");
-        mainLayout = (RelativeLayout) findViewById(R.id.parent_activityli);
-        mLoading = (TextView) findViewById(R.id.loading_activityli);
-        mUsername = (TextView) findViewById(R.id.userName_activityli);
+        mainLayout = findViewById(R.id.parent_activityli);
+        mLoading = findViewById(R.id.loading_activityli);
+        mUsername = findViewById(R.id.userName_activityli);
 
-        mSettingButton = (ImageButton) findViewById(R.id.settingsButton_activityli) ;
+        mSettingButton = findViewById(R.id.settingsButton_activityli) ;
         mSettingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShowPop();
             }
         });
-        mAddButton = (ImageButton) findViewById(R.id.addButton_activityli);
+
+        mAddButton = findViewById(R.id.addButton_activityli);
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,16 +74,11 @@ public class Library_Info_Activity extends Activity {
                 startActivity(intent1);
             }
         });
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView_acitivityli);
+
+        mRecyclerView = findViewById(R.id.recyclerView_acitivityli);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        //String[] mDataSet = {"first", "second", "third"};
-        //LibraryMail.get(username,password,getApplicationContext());
-        //UserBooksDB.BookInfo[] dummyInfo = LibraryMail.generateDummyInfo();
-        //mAdapter = new CustomRecyclerAdapter(dummyInfo);
-
-
 
         userBooksDB = new UserBooksDB(getApplicationContext());
         new RetrieveFeedTask().execute("");
@@ -100,11 +96,11 @@ public class Library_Info_Activity extends Activity {
             public boolean onMenuItemClick(MenuItem menuItem) {
 
                 if("Log Out".equals(menuItem.getTitle())){
-                    Toast.makeText(Library_Info_Activity.this,"You Clicked : " + menuItem.getTitle(), Toast.LENGTH_SHORT).show();
                     SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
                     sharedPreferences.edit().putString("username", null).apply();
                     sharedPreferences.edit().putString("password", null).apply();
                     LibraryMail.cleanup(Library_Info_Activity.this, userBooksDB);
+                    Toast.makeText(Library_Info_Activity.this,"Logged out successfully", Toast.LENGTH_SHORT).show();
                     finish();
                 }
 
@@ -134,8 +130,6 @@ public class Library_Info_Activity extends Activity {
 
         @Override
         protected UserBooksDB.BookInfo[] doInBackground(String... strings) {
-
-
 
             try {
                 LibraryMail.get(username, password, Library_Info_Activity.this, userBooksDB);
@@ -176,8 +170,7 @@ public class Library_Info_Activity extends Activity {
                 mRecyclerView.setAdapter(mAdapter);
             }else {
                 mLoading.setVisibility(View.GONE);
-                //Toast.makeText(getApplicationContext(), exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                String error = exception.getLocalizedMessage();
+
                 exception.printStackTrace();
                 Log.e("Error",exception.getLocalizedMessage());
 
@@ -197,8 +190,6 @@ public class Library_Info_Activity extends Activity {
                     }
                 }, 2000);
             }
-
-            //mRecyclerView.swapAdapter(mAdapter, false);
         }
     }
 
