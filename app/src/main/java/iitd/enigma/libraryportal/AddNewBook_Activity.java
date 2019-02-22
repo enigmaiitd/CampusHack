@@ -17,11 +17,11 @@ public class AddNewBook_Activity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adddialogbox);
 
+        Button cancelButton = (Button) findViewById(R.id.cancelButton_activityadb);
+        Button addButton = (Button) findViewById(R.id.addButton_activityadb);
 
-        Button cancelButton_activityadb = (Button) findViewById(R.id.cancelButton_activityadb);
-        Button addButton_activityadb = (Button) findViewById(R.id.addButton_activityadb);
-
-        addButton_activityadb.setOnClickListener(new View.OnClickListener() {
+        //TODO: Properly Implement adding books
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UserBooksDB.BookInfo bookInfo = new UserBooksDB.BookInfo();
@@ -32,7 +32,7 @@ public class AddNewBook_Activity extends Activity {
             }
         });
 
-        cancelButton_activityadb.setOnClickListener(new View.OnClickListener() {
+        cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
         .setOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick( View view ){
-                username = mEmail.getText().toString();// change accordingly
-                password = mPassword.getText().toString();// change accordingly
+                username = mEmail.getText().toString();
+                password = mPassword.getText().toString();
 
                 if (Rememberme_Checkbox.isChecked()){
                     sharedPreferences.edit().putString("username", username).apply();
@@ -56,13 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
-                //new RetrieveFeedTask().execute("");
                 Intent intent = new Intent(getApplicationContext(), Library_Info_Activity.class);
                 intent.putExtra("username", username);
                 intent.putExtra("password", password);
                 startActivity(intent);
-
-                //Toast.makeText( MainActivity.this, "PUSH DOWN !!", Toast.LENGTH_SHORT ).show();
             }
 
         });
