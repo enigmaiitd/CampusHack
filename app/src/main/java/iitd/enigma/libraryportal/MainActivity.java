@@ -3,15 +3,12 @@ package iitd.enigma.libraryportal;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
@@ -19,8 +16,6 @@ public class MainActivity extends AppCompatActivity {
 
     String username;
     String password;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView mPassword = findViewById(R.id.password_activitymain);
         mPassword.setTransformationMethod(new AsteriskPasswordTransformationMethod());
         TextView mLogin = findViewById(R.id.login);
-        final CheckBox Rememberme_Checkbox = findViewById(R.id.Rememberme_checkBox_activitymain);
+        final CheckBox rememberMeCheckbox = findViewById(R.id.Rememberme_checkBox_activitymain);
 
         final SharedPreferences sharedPreferences = this.getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
@@ -50,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 username = mEmail.getText().toString();
                 password = mPassword.getText().toString();
 
-                if (Rememberme_Checkbox.isChecked()){
+                if (rememberMeCheckbox.isChecked()){
                     sharedPreferences.edit().putString("username", username).apply();
                     sharedPreferences.edit().putString("password", password).apply();
 
@@ -72,18 +67,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private class PasswordCharSequence implements CharSequence {
-            private CharSequence mSource;
+            private CharSequence source;
             public PasswordCharSequence(CharSequence source) {
-                mSource = source; // Store char sequence
+                this.source = source; // Store char sequence
             }
             public char charAt(int index) {
                 return '•'; // This is the important part
             }
             public int length() {
-                return mSource.length(); // Return default
+                return source.length(); // Return default
             }
             public CharSequence subSequence(int start, int end) {
-                return mSource.subSequence(start, end); // Return default
+                return source.subSequence(start, end); // Return default
             }
         }
     };

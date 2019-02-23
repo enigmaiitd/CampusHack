@@ -1,12 +1,9 @@
 package iitd.enigma.libraryportal;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +15,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,16 +28,16 @@ import iitd.enigma.libraryportal.Adapters.CustomRecyclerAdapter;
 
 
 public class Library_Info_Activity extends Activity {
-    RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
-    RecyclerView.LayoutManager mLayoutManager;
-    ImageButton mSettingButton;
-    ImageButton mAddButton;
+    RecyclerView recyclerView;
+    RecyclerView.Adapter adapter;
+    RecyclerView.LayoutManager layoutManager;
+    ImageButton settingButton;
+    ImageButton addButton;
     RelativeLayout mainLayout;
     String username;
     String password;
-    TextView mLoading;
-    TextView mUsername;
+    TextView textViewLoading; //TODO: Think of better name
+    TextView textViewUsername;
 
     UserBooksDB userBooksDB;
 
@@ -55,19 +51,19 @@ public class Library_Info_Activity extends Activity {
         username = intent.getStringExtra("username");
         password = intent.getStringExtra("password");
         mainLayout = findViewById(R.id.parent_activityli);
-        mLoading = findViewById(R.id.loading_activityli);
-        mUsername = findViewById(R.id.userName_activityli);
+        textViewLoading = findViewById(R.id.loading_activityli);
+        textViewUsername = findViewById(R.id.userName_activityli);
 
-        mSettingButton = findViewById(R.id.settingsButton_activityli) ;
-        mSettingButton.setOnClickListener(new View.OnClickListener() {
+        settingButton = findViewById(R.id.settingsButton_activityli) ;
+        settingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShowPop();
             }
         });
 
-        mAddButton = findViewById(R.id.addButton_activityli);
-        mAddButton.setOnClickListener(new View.OnClickListener() {
+        addButton = findViewById(R.id.addButton_activityli);
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(getApplicationContext(), AddNewBook_Activity.class);
@@ -75,10 +71,10 @@ public class Library_Info_Activity extends Activity {
             }
         });
 
-        mRecyclerView = findViewById(R.id.recyclerView_acitivityli);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        recyclerView = findViewById(R.id.recyclerView_acitivityli);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
 
         userBooksDB = new UserBooksDB(getApplicationContext());
         new RetrieveFeedTask().execute("");
@@ -87,7 +83,7 @@ public class Library_Info_Activity extends Activity {
 
     void ShowPop(){
         //Creating the instance of PopupMenu
-        PopupMenu popupMenu = new PopupMenu(Library_Info_Activity.this, mSettingButton);
+        PopupMenu popupMenu = new PopupMenu(Library_Info_Activity.this, settingButton);
         //Inflating the Popup using xml file
         popupMenu.getMenuInflater().inflate(R.menu.settings, popupMenu.getMenu());
         //registering popup with OnMenuItemClickListener
@@ -157,19 +153,19 @@ public class Library_Info_Activity extends Activity {
             if(exception == null){
 
                 if(booksInfo.length != 0){
-                    mUsername.setText(booksInfo[0].issuedTo);
-                    mLoading.setVisibility(View.GONE);
+                    textViewUsername.setText(booksInfo[0].issuedTo);
+                    textViewLoading.setVisibility(View.GONE);
                 }
                 else{
-                    mLoading.setText("No Books Issued");
+                    textViewLoading.setText("No Books Issued");
                 }
 
 
-                mAdapter = new CustomRecyclerAdapter(booksInfo);
-                mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
-                mRecyclerView.setAdapter(mAdapter);
+                adapter = new CustomRecyclerAdapter(booksInfo);
+                recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
+                recyclerView.setAdapter(adapter);
             }else {
-                mLoading.setVisibility(View.GONE);
+                textViewLoading.setVisibility(View.GONE);
 
                 exception.printStackTrace();
                 Log.e("Error",exception.getLocalizedMessage());

@@ -10,8 +10,8 @@ public class MessageParser {
         //since function written according to whitespaces
         messageString = messageString.replace("\t", "        ");
 
-        String accNo;
-        String name;
+        String accessionNumber;
+        String bookName;
         Date dueDate = new Date();
         String issuedTo;
         String EntryNo;//if required
@@ -25,7 +25,7 @@ public class MessageParser {
         //splitting string line by line
         lines = messageString.split("\\r?\\n");
 
-        //checking for occurence of ISSUE
+        //checking for occurrence of ISSUE
         for (; count < lines.length; count++) {
             if (lines[count].matches("(.*)ISSUE(.*)"))
                 break;
@@ -90,15 +90,15 @@ public class MessageParser {
 
             infoLine = lines[count].trim();
             info = infoLine.split("\\s{2,30}");//splitting by 2 or more whitespaces
-            name = info[1].trim();//got some words of name
-            accNo = info[2].trim();//got accno
+            bookName = info[1].trim();//got some words of bookName
+            accessionNumber = info[2].trim();//got accno
             String dateStr = info[3].trim();//got date in string form
 
-            //counting charcters(including whitespaces) before appearance of name of book in the current line
+            //counting characters(including whitespaces) before appearance of bookName of book in the current line
             infoLine = lines[count];
             int noOfWhite = 0;
             for (int k = 0; k < infoLine.length(); k++) {
-                if (infoLine.charAt(k) != name.charAt(0))
+                if (infoLine.charAt(k) != bookName.charAt(0))
                     noOfWhite++;
                 else break;
             }
@@ -115,7 +115,7 @@ public class MessageParser {
                     break;//break if no of leading whitespaces is lesser
 
                 infoLine = infoLine.trim();
-                name = name + " " + infoLine;//adding to name of book
+                bookName = bookName + " " + infoLine;//adding to bookName of book
             }
 
             //string to date
@@ -126,7 +126,7 @@ public class MessageParser {
             } catch (ParseException e) {
             }
 
-            bookInfo[i] = new UserBooksDB.BookInfo(accNo, name, issuedTo, dueDate);
+            bookInfo[i] = new UserBooksDB.BookInfo(accessionNumber, bookName, issuedTo, dueDate);
         }
 
         return bookInfo;
@@ -136,8 +136,8 @@ public class MessageParser {
         //since function written according to whitespaces
         messageString = messageString.replace("\t", "        ");
 
-        String accNo;
-        String name;
+        String accessionNumber;
+        String bookName;
         Date dueDate = new Date();
         String issuedTo;
         String EntryNo;//if required
@@ -216,15 +216,15 @@ public class MessageParser {
 
             infoLine = lines[count].trim();
             info = infoLine.split("\\s{2,30}");//splitting by 2 or more whitespaces
-            name = info[1].trim();//got some words of name
-            accNo = info[0].trim();//got accno
+            bookName = info[1].trim();//got some words of bookName
+            accessionNumber = info[0].trim();//got accno
             String dateStr = info[2].trim();//got date in string form
 
-            //counting charcters(including whitespaces) before appearance of name of book in the current line
+            //counting charcters(including whitespaces) before appearance of bookName of book in the current line
             infoLine = lines[count];
             int noOfWhite = 0;
             for (int k = 0; k < infoLine.length(); k++) {
-                if (infoLine.charAt(k) != name.charAt(0))
+                if (infoLine.charAt(k) != bookName.charAt(0))
                     noOfWhite++;
                 else break;
             }
@@ -241,7 +241,7 @@ public class MessageParser {
                     break;//break if no of leading whitespaces is lesser
 
                 infoLine = infoLine.trim();
-                name = name + " " + infoLine;//adding to name of book
+                bookName = bookName + " " + infoLine;//adding to bookName of book
             }
 
             //string to date
@@ -252,7 +252,7 @@ public class MessageParser {
             } catch (ParseException e) {
             }
 
-            bookInfo[i] = new UserBooksDB.BookInfo(accNo, name, issuedTo, dueDate);
+            bookInfo[i] = new UserBooksDB.BookInfo(accessionNumber, bookName, issuedTo, dueDate);
         }
 
         return bookInfo;
